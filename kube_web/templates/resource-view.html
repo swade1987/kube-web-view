@@ -28,6 +28,7 @@
 </div>
 {% else: %}
 <div>
+    <div>
     {% for key, val in resource.labels.items()|sort: %}
       {% if namespace: %}
     <a href="/clusters/{{ cluster }}/namespaces/{{ namespace }}/{{ resource.endpoint }}?selector={{key}}={{val}}"><span class="tag is-link">{{ key }}: {{ val }}</span></a>
@@ -38,6 +39,12 @@
     {% for key, val in resource.annotations.items()|sort: %}
     <span class="tag">{{ key }}: {{ val }}</span>
     {% endfor %}
+    </div>
+
+    {% for owner_ref in resource.metadata.ownerReferences: %}
+    <a href="/clusters/{{ cluster }}/namespaces/{{ resource.metadata.namespace }}/{{ owner_ref.kind }}/{{ owner_ref.name }}">{{ owner_ref.kind }} {{ owner_ref.name }}</a>
+    {% endfor %}
+
     {% for key, val in resource.obj.items()|sort: %}
     {% if key not in ('metadata', 'apiVersion', 'kind'): %}
     <div class="card">
